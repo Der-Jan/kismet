@@ -41,7 +41,8 @@ WIErr wlc_ioctl(WirelessContextPtr ctx, int command, int bufsize,
                 memcpy(&buf[2], buffer, bufsize);
         }
 
-        return WirelessPrivate(ctx, buf, bufsize+8, out, outsize);
+//        return WirelessPrivate(ctx, buf, bufsize+8, out, outsize);
+	return 0;
 }
 
 
@@ -93,7 +94,10 @@ WIErr wlc_ioctl(WirelessContextPtr ctx, int command, int bufsize,
 
 	// We only know how to return the channels on corewireless
 	if (iface != nil) {
-		ret = [iface supportedChannels];
+		if (kCFCoreFoundationVersionNumber < 635.0 )
+			ret = [iface supportedChannels];
+		else
+			ret = [iface supportedWLANChannels];
 	}
 
 	return ret;
