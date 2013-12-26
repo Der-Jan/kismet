@@ -240,7 +240,10 @@ int darwin_get_channels(const char *in_iface, int **ret_channels) {
 	ret = (int *) malloc(sizeof(int) * [supported count]);
 
 	for (id sup in supported) {
-		ret[x++] = [sup intValue];
+                if (kCFCoreFoundationVersionNumber < 635.0 )
+			ret[x++] = [sup intValue];
+		else
+			ret[x++] = [sup channelNumber];
 	}
 
 	*ret_channels = ret;

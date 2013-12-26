@@ -117,9 +117,13 @@ WIErr wlc_ioctl(WirelessContextPtr ctx, int command, int bufsize,
 	BOOL ret;
 
 	if (iface != nil) {
+		id channel = nil;
 		[iface disassociate];
 
-		ret = [iface setChannel:c error:&wcerr];
+		for (id chan in [iface supportedWLANChannels])
+			if ([chan channelNumber] == c) channel = chan;
+
+		ret = [iface setWLANChannel:channel error:&wcerr];
 
 		if (!ret) {
 			snprintf(e, 1024, "%s", [[wcerr localizedDescription] cString]);
